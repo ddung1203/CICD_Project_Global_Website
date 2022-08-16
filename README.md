@@ -1,1 +1,1 @@
-# CICD_Project_Global_Website
+# 글로벌 웹서비스 인프라 구축
