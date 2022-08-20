@@ -1,0 +1,92 @@
+- hosts: ansible_host
+  gather_facts: no
+ 
+  tasks:
+    - name: Destroy Deployment
+      k8s:
+        state: absent
+        definition:
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: node-js
+            namespace: default
+          spec:
+            replicas: 1
+            selector:
+              matchLabels:
+                app: node-js
+            template:
+              metadata:
+                labels:
+                  app: node-js
+              spec:
+                containers:
+                  - name: node-js
+                    image: "ddung1203/node-js:{{ lookup('env', 'BUILD_NUMBER') }}"
+                    imagePullPolicy: Always
+                    ports:
+                      - containerPort: 3000
+                    resources:
+                      requests:
+                        cpu: 500m
+                        memory: 500M
+                      limits:
+                        cpu: 800m
+                        memory: 800M
+
+    - name: Create Deployment
+      k8s:
+        state: present
+        definition:
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: node-js
+            namespace: default
+          spec:
+            replicas: 1
+            selector:
+              matchLabels:
+                app: node-js
+            template:
+              metadata:
+                labels:
+                  app: node-js
+              spec:
+                containers:
+                  - name: node-js
+                    image: "ddung1203/node-js:{{ lookup('env', 'BUILD_NUMBER') }}"
+                    imagePullPolicy: Always
+                    ports:
+                      - containerPort: 3000
+                    resources:
+                      requests:
+                        cpu: 500m
+                        memory: 500M
+                      limits:
+                        cpu: 800m
+                        memory: 800M
+
+    - name: Create Service
+      k8s:
+        state: present
+        definition:
+          apiVersion: v1
+          kind: Service
+          metadata:
+            name: node-js-lb
+            namespace: default
+            annotations:
+             service.beta.kubernetes.io/aws-load-balancer-type: "external"
+             service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: "instance"
+             service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing"
+          spec:
+            type: LoadBalancer
+            selector:
+              app: node-js
+            ports:
+              - port: 80
+                targetPort: 3000
+
+    - command: kubectl apply -f /home/ubuntu/nodejs/hpa.yaml
