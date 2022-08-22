@@ -11,8 +11,8 @@
     - name: Build and Push Image
       docker_image:
         build:
-          path: /home/vagrant/CICD_Project_Global_Website/nodejs/
-        name: ddung1203/node-js
+          path: /home/vagrant/CICD_Project_Global_Website/realmytrip/
+        name: ddung1203/realmytrip
         tag: "{{ lookup('env', 'BUILD_NUMBER') }}"
         push: yes
         source: build
