@@ -97,4 +97,4 @@
                 targetPort: 3000
                 nodePort: 32123
 
-    - command: kubectl apply -f ./hpa.yaml
+    - command: kubectl apply -f realmytrip/hpa.yaml

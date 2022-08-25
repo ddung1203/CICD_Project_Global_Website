@@ -11,7 +11,7 @@
     - name: Build and Push Image
       docker_image:
         build:
-          path: /home/vagrant/CICD_Project_Global_Website/realmytrip/
+          path: realmytrip/
         name: ddung1203/realmytrip
         tag: "{{ lookup('env', 'BUILD_NUMBER') }}"
         push: yes
